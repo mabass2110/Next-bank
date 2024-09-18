@@ -5,11 +5,18 @@ import Link from "next/link";
 import { useState, useMemo } from "react";
 import { EyeFilledIcon } from "../components/eyefilledicon";
 import { EyeSlashFilledIcon } from "../components/eyeslashfilledicon";
-import { handleSubmit } from "../login/handlesubmit";
+
+
 
 function Login() {
+
+  //State variables
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [message, setMessage] = useState('');
   const [value, setValue] = useState("");
   const [isVisible, setIsVisible] = useState(false);
+
 
   const validateEmail = (value: string) => value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i);
 
@@ -19,6 +26,28 @@ function Login() {
   }, [value]);
 
   const toggleVisibility = () => setIsVisible(!isVisible);
+
+// Function to handle form submission
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+
+    // Prevent the default form submission behavior
+    e.preventDefault();
+ 
+    // Send a POST request to the sign-in API
+    const response = await fetch('/api/auth/signin', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
+
+
+    // Parse the JSON response from the server
+    const data = await response.json();
+
+     // Update the message state with either an error message or a success message
+    setMessage(data.error || 'Sign in successful!');
+  };
+
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
@@ -82,6 +111,7 @@ function Login() {
               </Link>
             </p>
           </div>
+          {message && <p>{message}</p>}
         </form>
       </div>
     </div>
