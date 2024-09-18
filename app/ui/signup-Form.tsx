@@ -7,47 +7,49 @@ import { EyeSlashFilledIcon } from "../components/eyeslashfilledicon";
 
 function SignUp() {
   const [isVisible, setIsVisible] = useState(false);
-  const [emailValue, setEmailValue] = useState("");
-  const [nameValue, setNameValue] = useState("");
-  const [lastNameValue, setLastNameValue] = useState("");
-  const [passwordValue, setPasswordValue] = useState("");
+  const [email, setEmail] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [password, setPassword] = useState("");
   const [confirmPasswordValue, setConfirmPasswordValue] = useState("");
+  const [message, setMessage] = useState('');
 
   const validateEmail = (value: string) => value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i);
   const validateName = (value: string): boolean => /^[A-Za-z][A-Za-z'-\s]*[A-Za-z]$/.test(value);
 
   const isEmailInvalid = useMemo(() => {
-    return emailValue === "" ? false : !validateEmail(emailValue);
-  }, [emailValue]);
+    return email === "" ? false : !validateEmail(email);
+  }, [email]);
 
   const isNameInvalid = useMemo(() => {
-    return nameValue === "" ? false : !validateName(nameValue);
-  }, [nameValue]);
+    return firstName === "" ? false : !validateName(firstName);
+  }, [firstName]);
 
   const isLastNameInvalid = useMemo(() => {
-    return lastNameValue === "" ? false : !validateName(lastNameValue);
-  }, [lastNameValue]);
+    return lastName === "" ? false : !validateName(lastName);
+  }, [lastName]);
 
   const isPasswordInvalid = useMemo(() => {
-    return passwordValue === "" || confirmPasswordValue !== passwordValue;
-  }, [passwordValue, confirmPasswordValue]);
+    return password === "" || confirmPasswordValue !== password;
+  }, [password, confirmPasswordValue]);
 
-  const passwordsMatch = passwordValue === confirmPasswordValue && passwordValue !== "";
+  const passwordsMatch = password === confirmPasswordValue && password !== "";
   const passwordColor = passwordsMatch ? "success" : "danger";
-
   const toggleVisibility = () => setIsVisible(!isVisible);
-
-  const handleSubmit = (e: React.FormEvent) => {
+  
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (isEmailInvalid || isNameInvalid || isLastNameInvalid || isPasswordInvalid) {
-      console.log("Form is invalid");
-      return;
-    }
+    const response = await fetch('/api/auth/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ firstName, lastName, email, password }),
+    });
 
-    console.log("Form submitted", { nameValue, lastNameValue, emailValue, passwordValue });
-    // Handle form submission here
+    const data = await response.json();
+    setMessage(data.error || 'Sign up successful!');
   };
+  
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
@@ -63,8 +65,8 @@ function SignUp() {
               placeholder="Enter your first name"
               color={isNameInvalid ? "danger" : "success"}
               errorMessage="Please enter a valid name"
-              value={nameValue}
-              onValueChange={setNameValue}
+              value={firstName}
+              onValueChange={setFirstName}
               className="w-full max-w-xs text-gray-800"
             />
           </div>
@@ -78,8 +80,8 @@ function SignUp() {
               placeholder="Enter your last name"
               color={isLastNameInvalid ? "danger" : "success"}
               errorMessage="Please enter a valid name"
-              value={lastNameValue}
-              onValueChange={setLastNameValue}
+              value={lastName}
+              onValueChange={setLastName}
               className="w-full max-w-xs text-gray-800"
             />
           </div>
@@ -94,9 +96,9 @@ function SignUp() {
               placeholder="Enter your email"
               color={isEmailInvalid ? "danger" : "success"}
               errorMessage="Please enter a valid email"
-              value={emailValue}
-              onClear={() => setEmailValue("")}
-              onValueChange={setEmailValue}
+              value={email}
+              onClear={() => setEmail("")}
+              onValueChange={setEmail}
               className="w-full max-w-xs text-gray-800"
             />
           </div>
@@ -121,8 +123,8 @@ function SignUp() {
                 </button>
               }
               type={isVisible ? "text" : "password"}
-              value={passwordValue}
-              onValueChange={setPasswordValue}
+              value={password}
+              onValueChange={setPassword}
               color={passwordColor}
               className="w-full pr-12 text-gray-800"
               aria-label="Password"
@@ -163,6 +165,7 @@ function SignUp() {
           >
             Sign Up
           </button>
+          {message && <p>{message}</p>}
         </form>
       </div>
     </div>
