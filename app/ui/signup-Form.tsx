@@ -1,5 +1,5 @@
 "use client"
-
+import { useRouter } from "next/navigation";
 import { Input } from "@nextui-org/react";
 import { useMemo, useState } from "react";
 import { EyeFilledIcon } from "../components/eyefilledicon";
@@ -14,6 +14,7 @@ function SignUp() {
   const [confirmPasswordValue, setConfirmPasswordValue] = useState("");
   const [message, setMessage] = useState('');
 
+  const router = useRouter();
   const validateEmail = (value: string) => value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i);
   const validateName = (value: string): boolean => /^[A-Za-z][A-Za-z'-\s]*[A-Za-z]$/.test(value);
 
@@ -46,8 +47,16 @@ function SignUp() {
       body: JSON.stringify({ firstName, lastName, email, password }),
     });
 
-    const data = await response.json();
-    setMessage(data.error || 'Sign up successful!');
+    if (response.ok){
+      setMessage("Sign up successful!");
+      return router.push("/login");
+    }
+
+    else{
+      const data = await response.json();
+      setMessage(data.error); 
+    }
+
   };
   
 
