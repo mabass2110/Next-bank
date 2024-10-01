@@ -1,46 +1,60 @@
 "use client";
-import { signIn } from "next-auth/react"
-import { Input } from "@nextui-org/input";
+import { signIn } from "next-auth/react";
+import { Input } from "@nextui-org/react"; // Updated import from "@nextui-org/input" to "@nextui-org/react"
 import Link from "next/link";
+import { useEmail } from "../context/context";
 import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { EyeFilledIcon } from "../components/eyefilledicon";
 import { EyeSlashFilledIcon } from "../components/eyeslashfilledicon";
-import { FaGoogle, FaApple } from 'react-icons/fa'; // Import icons from react-icons
+import { FaGoogle } from 'react-icons/fa'; // Google icon
 
 function Login() {
-  const router = useRouter()
+  const router = useRouter();
+  const { setEmail } = useEmail();
+  
   // State variables
-  const [email, setEmail] = useState('');
+  const [emailF, setEmailInput] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
-  const [value, setValue] = useState("");
   const [isVisible, setIsVisible] = useState(false);
 
   const validateEmail = (value: string) => value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i);
 
   const isInvalid = useMemo(() => {
-    if (value === "") return false;
-    return !validateEmail(value);
-  }, [value]);
+    if (emailF === "") return false;
+    return !validateEmail(emailF);
+  }, [emailF]);
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
   // Function to handle form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (isInvalid) {
+      setMessage('Please enter a valid email address.');
+      return;
+    }
+
     const response = await fetch('/api/auth/signin', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ email: emailF, password }), // Use emailF for email
     });
+
     const data = await response.json();
-    router.push("/")
-    setMessage(data.error || 'Sign in successful!');
+
+    if (response.ok) {
+      setEmail(emailF); // Set email context
+      router.push("/deposit"); // Redirect after successful sign-in
+      setMessage('Sign in successful!');
+    } else {
+      setMessage(data.error || 'An error occurred during sign-in.');
+    }
   };
 
-  const handleSignIn = () => signIn("google")
-
+  const handleSignIn = () => signIn("google");
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
@@ -54,9 +68,9 @@ function Login() {
               label="Email"
               variant="bordered"
               placeholder="Enter your email"
-              errorMessage="Please enter a valid email"
-              onClear={() => console.log("input cleared")}
-              onValueChange={setValue}
+              errorMessage={isInvalid ? "Please enter a valid email" : ""}
+              onClear={() => setEmailInput('')}
+              onValueChange={setEmailInput}
               className="w-full text-gray-800"
             />
           </div>
@@ -83,6 +97,7 @@ function Login() {
               type={isVisible ? "text" : "password"}
               className="w-full pr-12 text-gray-800"
               aria-label="Password"
+              onValueChange={setPassword}
             />
           </div>
 
