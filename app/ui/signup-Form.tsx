@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useRouter } from "next/navigation";
 import { Input } from "@nextui-org/react";
 import { useMemo, useState } from "react";
@@ -12,32 +12,23 @@ function SignUp() {
   const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPasswordValue, setConfirmPasswordValue] = useState("");
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState<'success' | 'error' | null>(null);
 
   const router = useRouter();
+  
   const validateEmail = (value: string) => value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i);
   const validateName = (value: string): boolean => /^[A-Za-z][A-Za-z'-\s]*[A-Za-z]$/.test(value);
 
-  const isEmailInvalid = useMemo(() => {
-    return email === "" ? false : !validateEmail(email);
-  }, [email]);
-
-  const isNameInvalid = useMemo(() => {
-    return firstName === "" ? false : !validateName(firstName);
-  }, [firstName]);
-
-  const isLastNameInvalid = useMemo(() => {
-    return lastName === "" ? false : !validateName(lastName);
-  }, [lastName]);
-
-  const isPasswordInvalid = useMemo(() => {
-    return password === "" || confirmPasswordValue !== password;
-  }, [password, confirmPasswordValue]);
+  const isEmailInvalid = useMemo(() => !email || !validateEmail(email), [email]);
+  const isNameInvalid = useMemo(() => !firstName || !validateName(firstName), [firstName]);
+  const isLastNameInvalid = useMemo(() => !lastName || !validateName(lastName), [lastName]);
+  const isPasswordInvalid = useMemo(() => password === "" || confirmPasswordValue !== password, [password, confirmPasswordValue]);
 
   const passwordsMatch = password === confirmPasswordValue && password !== "";
   const passwordColor = passwordsMatch ? "success" : "danger";
   const toggleVisibility = () => setIsVisible(!isVisible);
-  
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -47,18 +38,16 @@ function SignUp() {
       body: JSON.stringify({ firstName, lastName, email, password }),
     });
 
-    if (response.ok){
+    if (response.ok) {
       setMessage("Sign up successful!");
-      return router.push("/login");
-    }
-
-    else{
+      setMessageType('success');
+      router.push("/login");
+    } else {
       const data = await response.json();
-      setMessage(data.error); 
+      setMessage(data.error || "An error occurred");
+      setMessageType('error');
     }
-
   };
-  
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
@@ -174,7 +163,12 @@ function SignUp() {
           >
             Sign Up
           </button>
-          {message && <p>{message}</p>}
+
+          {message && (
+            <p className={`mt-4 text-center font-semibold ${messageType === 'success' ? 'text-green-500' : 'text-red-500'}`}>
+              {message}
+            </p>
+          )}
         </form>
       </div>
     </div>
