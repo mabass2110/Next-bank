@@ -23,8 +23,7 @@ function SignUp() {
   const isEmailInvalid = useMemo(() => !email || !validateEmail(email), [email]);
   const isNameInvalid = useMemo(() => !firstName || !validateName(firstName), [firstName]);
   const isLastNameInvalid = useMemo(() => !lastName || !validateName(lastName), [lastName]);
-  const isPasswordInvalid = useMemo(() => password === "" || confirmPasswordValue !== password, [password, confirmPasswordValue]);
-
+  
   const passwordsMatch = password === confirmPasswordValue && password !== "";
   const passwordColor = passwordsMatch ? "success" : "danger";
   const toggleVisibility = () => setIsVisible(!isVisible);
