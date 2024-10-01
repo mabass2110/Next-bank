@@ -3,7 +3,7 @@ import axios from "axios";
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button } from "@nextui-org/react";
 import { siteConfig } from "@/config/site"; // Adjust the path as necessary
 import { usePathname } from 'next/navigation'; // Import from next/navigation
-import { useState } from "react";
+
 
 import { useRouter } from "next/navigation";
 export default function Navibar() {
