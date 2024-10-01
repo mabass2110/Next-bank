@@ -15,6 +15,10 @@ export async function POST(request: NextRequest) {
   try {
     // Find the user by email from the token
     const email = getDataFromToken(request);
+    // Check if email is valid
+    if (!email) {
+      return NextResponse.json({ error: 'Token is invalid or expired' }, { status: 401 });
+    }
     const user = await prisma.user.findUnique({ where: { email } });
 
     if (!user) {
