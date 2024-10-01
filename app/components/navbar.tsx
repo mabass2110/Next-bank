@@ -4,7 +4,7 @@ import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button } from "@n
 import { siteConfig } from "@/config/site"; // Adjust the path as necessary
 import { usePathname } from 'next/navigation'; // Import from next/navigation
 import { useState } from "react";
-import { useSession, signOut } from "next-auth/react";
+
 import { useRouter } from "next/navigation";
 export default function Navibar() {
   const router = useRouter();
@@ -21,7 +21,7 @@ export default function Navibar() {
   
 
   const pathname = usePathname(); // Use usePathname instead of useRouter
-  const [isLogged, setisLogged] = useState(null);
+ 
   return (
     <Navbar
       classNames={{
