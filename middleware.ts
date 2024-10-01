@@ -10,7 +10,7 @@ export function middleware(request: NextRequest) {
 
  
  if(isPublicPath && token) {
-    return NextResponse.redirect(new URL("/", request.nextUrl))
+    return NextResponse.redirect(new URL("/deposit", request.nextUrl))
  }
 
  if(!isPublicPath && !token) {
@@ -21,7 +21,7 @@ export function middleware(request: NextRequest) {
 //matching paths to run the middleware
 export const config = {
   matcher: [
-   '/',
+    '/',
    '/login',
    '/withdraw',
    '/deposit' 
