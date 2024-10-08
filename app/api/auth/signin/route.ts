@@ -1,11 +1,11 @@
-import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import { NextRequest, NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import prisma from '@/app/lib/prisma';
 
 dotenv.config();
-const prisma = new PrismaClient();
+
 
 export async function POST(request: NextRequest) {
   const { email, password } = await request.json();
@@ -16,6 +16,10 @@ export async function POST(request: NextRequest) {
 
   try {
     const user = await prisma.user.findUnique({ where: { email } });
+   
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' });
+  }
 
     if (user && await bcrypt.compare(password, user.password)) {
       const tokenData = {
