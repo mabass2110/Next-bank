@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
 import { getDataFromToken } from '@/app/utils/getDataFromToken';
-
-const prisma = new PrismaClient();
+import prisma from '@/app/lib/prisma';
 
 export async function GET(request: NextRequest) {
   try {
