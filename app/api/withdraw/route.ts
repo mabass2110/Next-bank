@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
 import { getDataFromToken } from '@/app/utils/getDataFromToken';
 
-const prisma = new PrismaClient();
+import prisma from '@/app/lib/prisma';
 
 export async function POST(request: NextRequest) {
   const { amount } = await request.json(); // Get the amount from the request body
