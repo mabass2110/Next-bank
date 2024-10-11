@@ -54,7 +54,10 @@ function Login() {
     }
   };
 
-  const handleSignIn = () => signIn("google");
+  const handleSignIn = () => {
+        signIn("google");
+        router.push("/deposit")
+      }
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
