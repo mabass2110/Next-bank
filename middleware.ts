@@ -23,5 +23,7 @@ export const config = {
   matcher: [
     '/',
    '/login',
+   '/withdraw',
+   '/deposit'
   ],
 }
