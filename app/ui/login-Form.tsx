@@ -55,8 +55,7 @@ function Login() {
   };
 
   const handleSignIn = () => {
-        signIn("google");
-        router.push("/deposit")
+        signIn("google", { redirect: '/deposit' });
       }
 
   return (
