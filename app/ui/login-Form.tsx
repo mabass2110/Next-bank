@@ -12,7 +12,6 @@ import { FaGoogle } from 'react-icons/fa'; // Google icon
 function Login() {
   const router = useRouter();
   const { setEmail } = useEmail();
-  
   // State variables
   const [emailF, setEmailInput] = useState('');
   const [password, setPassword] = useState('');
@@ -55,8 +54,8 @@ function Login() {
   };
 
   const handleSignIn = () => {
-        signIn("google");
-        router.push("/deposit")
+        signIn("google", { redirectTo: "/deposit"});
+        
       }
 
   return (
