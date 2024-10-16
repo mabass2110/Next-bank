@@ -53,9 +53,10 @@ function Login() {
     }
   };
 
-  const handleSignIn = () => {
-        signIn("google", { redirectTo: "/deposit"});
-        
+  const handleSignIn = () =>{ 
+    
+        signIn("google", { redirect: true , callbackURL: '/deposit'});
+
       }
 
   return (
