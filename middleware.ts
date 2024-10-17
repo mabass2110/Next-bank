@@ -25,6 +25,6 @@ export const config = {
    '/login', 
    '/withdraw',
    '/deposit'
-   
-  ],
+
+],
 }
