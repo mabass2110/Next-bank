@@ -40,6 +40,7 @@ function SignUp() {
     if (response.ok) {
       setMessage("Sign up successful!");
       setMessageType('success');
+      alert("User successfully created");
       router.push("/login");
     } else {
       const data = await response.json();
