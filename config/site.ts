@@ -5,7 +5,10 @@ export const siteConfig = {
   description: "Make beautiful websites regardless of your design experience.",
 
   navMenuItems: [
-   
+   {
+    label: "Home",
+    href: "/"
+   },
     {
       label: "Deposit",
       href: "/deposit",
