@@ -134,7 +134,10 @@ function Login() {
               </Link>
             </p>
           </div>
-          {message && <p className="text-red-500 text-center mt-4">{message}</p>}
+          <p className={`text-center mt-4 ${message === 'Sign in successful!' ? 'text-green-500' : 'text-red-500'}`}>
+  {message}
+</p>
+
         </form>
       </div>
     </div>
