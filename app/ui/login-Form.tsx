@@ -46,7 +46,7 @@ function Login() {
 
     if (response.ok) {
       setEmail(emailF); // Set email context
-      router.push("/deposit"); // Redirect after successful sign-in
+      router.push("/"); // Redirect after successful sign-in
       setMessage('Sign in successful!');
     } else {
       setMessage(data.error || 'An error occurred during sign-in.');
